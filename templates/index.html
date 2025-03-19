@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>News Analysis</title>
+    <style>
+        /* General styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1, h2 {
+            color: #333;
+        }
+
+        /* Flexbox layout for two columns */
+        .container {
+            display: flex;
+            gap: 20px;
+        }
+        .news-column {
+            flex: 1;
+        }
+        .graph-column {
+            flex: 1;
+        }
+
+        /* News item styles */
+        .news-item {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff;
+        }
+        .news-title {
+            white-space: normal;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .news-date {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        .news-details {
+            margin-left: 20px;
+        }
+
+        /* Graph styles */
+        .graph-container {
+            background-color: #fff;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>News Analysis</h1>
+    <form method="POST">
+        Start Date: <input type="date" name="start_date">
+        End Date: <input type="date" name="end_date">
+        <input type="submit" value="Analyze">
+    </form>
+
+    {% if grouped_news %}
+        <div class="container">
+            <!-- Left column: Grouped news list -->
+            <div class="news-column">
+                <h2>News List</h2>
+                {% for date, news in grouped_news.items() %}
+                    <div class="news-item">
+                        <div class="news-date">{{ date }}</div>
+                        <div class="news-details">
+                            {% for article in news %}
+                                <div class="news-title"><a href={{ article.link }}>{{ article.title }}</a></div>
+                                <div>Bias Score: {{ article.bias }}</div>
+                                <div>Positivity Score: {{ article.positivity }}</div>
+                                <br>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Right column: Graph -->
+            <div class="graph-column">
+                <h2>Daily Mean Scores</h2>
+                <div class="graph-container">
+                    {{ graph_html|safe }}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</body>
+</html>
